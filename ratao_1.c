@@ -66,3 +66,13 @@ void explorar_labirinto(Matriz* g, int no_atual) {
         }
     }
 }
+
+int main() {
+    Matriz labirinto;
+    
+    inicializarMatriz(&labirinto, 16);
+
+    explorar_labirinto(&labirinto, 0);
+
+    return 0;
+}
