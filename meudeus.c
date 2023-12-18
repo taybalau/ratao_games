@@ -5,6 +5,13 @@ typedef struct {
   int m;
 } grafo;
 
+// typedef struct {
+//   int x;
+//   int y;
+// } coords;
+
+
+
 // implementaçao com matriz
 
 grafo * inicializa_grafo(int m) {
@@ -59,7 +66,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
   if (frente && g->adj[u][v+1] == 0) {
     printf("w\n"); // anda pa frente
     fflush(stdout);
-    scanf("%d", result);
+    scanf("%d", &result);
     if (result == 2) { // encontrou o objetivo
       return;
     }
@@ -108,7 +115,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     rotaciona_horario(g, &direcao);
     printf("w\n"); // anda pa frente
     fflush(stdout);
-    scanf("%d", result);
+    scanf("%d", &result);
     if (result == 2) { // encontrou o objetivo
       return;
     }
@@ -157,7 +164,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     rotaciona_antihorario(g, direcao);
     printf("w\n"); // anda pa frente
     fflush(stdout);
-    scanf("%d", result);
+    scanf("%d", &result);
     if (result == 2) { // encontrou o objetivo
       return;
     }
@@ -207,7 +214,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     rotaciona_antihorario(g, direcao);
     printf("w\n"); // anda pa frente
     fflush(stdout);
-    scanf("%d", result);
+    scanf("%d", &result);
     if (result == 2) { // encontrou o objetivo
       return;
     }
@@ -258,6 +265,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
 }
 
 int main() {
+  // coords *c = malloc(sizeof)
   grafo *g = inicializa_grafo(29);
   g->adj[14][14] = 1; // posiçao que o rato começa
   // printf("%d\n", g->adj[0][0]);
