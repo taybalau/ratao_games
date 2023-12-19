@@ -234,9 +234,9 @@ void buscaProfundidade(Coordenada atual, int direcao)
     buscaProfundidade(pai, direcao);
 }
 
-void buscaEmLargura(){
+// void buscaEmLargura(){
     
-}
+// }
 
 int main()
 {

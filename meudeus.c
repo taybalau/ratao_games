@@ -5,6 +5,14 @@ typedef struct {
   int m;
 } grafo;
 
+typedef struct {
+  int x;
+  int y;
+  int vizinhos[4]; // posiçoes 0 1 2 e 3 para respectivamente vizinhos do norte, oeste, sul e leste (binário)
+  int direcao; // 0 1 2 ou 3 para dizer se o rato tá apontando pro norte, oeste..
+} stackRato;
+
+// stackRato *s = malloc(225 * sizeof(stackRato));
 // typedef struct {
 //   int x;
 //   int y;
@@ -54,7 +62,10 @@ void parseia_sensor(int num, int *frente, int *dir, int *tras, int *esq) {
     *dir = (num >> 1) & 1;
     *tras = (num >> 2) & 1;
     *esq = (num >> 3) & 1;
+
 }
+
+// void salva_sensor_parseado()
 
 
 void busca_profundidade(grafo *g, int u, int v, int direcao) {
@@ -70,6 +81,13 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
         fflush(stdout);
         scanf("%d", &result);
         g->adj[u-1][v] = 1; // visita a coordenada
+        s[++stackPointer].vizinhos[0] = frente;
+        s[stackPointer].vizinhos[1] = dir;
+        s[stackPointer].vizinhos[2] = tras;
+        s[stackPointer].vizinhos[3] = esq;
+        s[stackPointer].x = u-1;
+        s[stackPointer].y = v;
+        s[stackPointer].direcao = direcao;
         if (result == 2) { // encontrou o objetivo
           return;
         }
@@ -85,6 +103,13 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
         fflush(stdout);
         scanf("%d", &result);
         g->adj[u][v+1] = 1; // virado pro leste
+        s[++stackPointer].vizinhos[0] = frente;
+        s[stackPointer].vizinhos[1] = dir;
+        s[stackPointer].vizinhos[2] = tras;
+        s[stackPointer].vizinhos[3] = esq;
+        s[stackPointer].x = u;
+        s[stackPointer].y = v+1;
+        s[stackPointer].direcao = direcao;
         if (result == 2) { // encontrou o objetivo
           return;
         }
@@ -100,6 +125,13 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
         fflush(stdout);
         scanf("%d", &result);
         g->adj[u+1][v] = 1; // virado pro sul
+        s[++stackPointer].vizinhos[0] = frente;
+        s[stackPointer].vizinhos[1] = dir;
+        s[stackPointer].vizinhos[2] = tras;
+        s[stackPointer].vizinhos[3] = esq;
+        s[stackPointer].x = u+1;
+        s[stackPointer].y = v;
+        s[stackPointer].direcao = direcao;
         if (result == 2) { // encontrou o objetivo
           return;
         }
@@ -115,6 +147,13 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
         fflush(stdout);
         scanf("%d", &result);
         g->adj[u][v-1] = 1; // virado pro oeste
+        s[++stackPointer].vizinhos[0] = frente;
+        s[stackPointer].vizinhos[1] = dir;
+        s[stackPointer].vizinhos[2] = tras;
+        s[stackPointer].vizinhos[3] = esq;
+        s[stackPointer].x = u;
+        s[stackPointer].y = v-1;
+        s[stackPointer].direcao = direcao;
         if (result == 2) { // encontrou o objetivo
           return;
         }
@@ -127,9 +166,9 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     return;
   }
   if (dir) {
-    rotaciona_horario(g, &direcao);
     if (direcao == 0) {
       if (g->adj[u-1][v] == 0) {
+        rotaciona_horario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -145,6 +184,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 1) {
       if (g->adj[u][v+1] == 0) {
+        rotaciona_horario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -160,6 +200,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 2) {
       if (g->adj[u+1][v] == 0) {
+        rotaciona_horario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -175,6 +216,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 3) {
       if (g->adj[u][v-1] == 0) {
+        rotaciona_horario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -191,9 +233,9 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     return;
   }
   if (esq) {
-    rotaciona_antihorario(g, &direcao);
     if (direcao == 0) {
       if (g->adj[u-1][v] == 0) {
+        rotaciona_antihorario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -209,6 +251,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 1) {
       if (g->adj[u][v+1] == 0) {
+        rotaciona_antihorario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -224,6 +267,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 2) {
       if (g->adj[u+1][v] == 0) {
+        rotaciona_antihorario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -239,6 +283,7 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 3) {
       if (g->adj[u][v-1] == 0) {
+        rotaciona_antihorario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -256,10 +301,10 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
   }
 
   if (tras) {
-    rotaciona_antihorario(g, &direcao);
-    rotaciona_antihorario(g, &direcao);
     if (direcao == 0) {
       if (g->adj[u-1][v] == 0) {
+        rotaciona_antihorario(g, &direcao);
+        rotaciona_antihorario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -275,6 +320,8 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 1) {
       if (g->adj[u][v+1] == 0) {
+        rotaciona_antihorario(g, &direcao);
+        rotaciona_antihorario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -290,9 +337,8 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 2) {
       if (g->adj[u+1][v] == 0) {
-        rotaciona_horario(g, &direcao);
-        rotaciona_horario(g, &direcao);
-        rotaciona_horario(g, &direcao);
+        rotaciona_antihorario(g, &direcao);
+        rotaciona_antihorario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -308,6 +354,8 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 3) {
       if (g->adj[u][v-1] == 0) {
+        rotaciona_antihorario(g, &direcao);
+        rotaciona_antihorario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -324,6 +372,9 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     return;
   }
 }
+
+stackRato s[225];
+int stackPointer = -1;
 
 int main() {
   // coords *c = malloc(sizeof)
