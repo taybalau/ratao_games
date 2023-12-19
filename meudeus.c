@@ -33,20 +33,20 @@ grafo * inicializa_grafo(int m) {
 
 // }
 
-void rotaciona_horario(grafo *g, int direcao) {
+void rotaciona_horario(grafo *g, int *direcao) {
   printf("r\n");
   fflush(stdout);
   int result;
   scanf("%d", &result);
-  direcao = (direcao++ % 4 + 4) % 4;
+  *direcao = (*direcao+1 % 4 + 4) % 4;
 }
 
-void rotaciona_antihorario(grafo *g, int direcao) {
+void rotaciona_antihorario(grafo *g, int *direcao) {
   printf("l\n");
   fflush(stdout);
   int result;
   scanf("%d", &result);
-  direcao = (direcao-- % 4 + 4) % 4;
+  *direcao = (*direcao-1 % 4 + 4) % 4;
 }
 
 void parseia_sensor(int num, int *frente, int *dir, int *tras, int *esq) {
@@ -124,9 +124,10 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
         return;
       }
     }
+    return;
   }
   if (dir) {
-    rotaciona_horario(g, direcao);
+    rotaciona_horario(g, &direcao);
     if (direcao == 0) {
       if (g->adj[u-1][v] == 0) {
         printf("w\n"); // anda pa frente
@@ -187,9 +188,10 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
         return;
       }
     }
+    return;
   }
   if (esq) {
-    rotaciona_antihorario(g, direcao);
+    rotaciona_antihorario(g, &direcao);
     if (direcao == 0) {
       if (g->adj[u-1][v] == 0) {
         printf("w\n"); // anda pa frente
@@ -250,11 +252,12 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
         return;
       }
     }
+    return;
   }
 
   if (tras) {
-    rotaciona_antihorario(g, direcao);
-    rotaciona_antihorario(g, direcao);
+    rotaciona_antihorario(g, &direcao);
+    rotaciona_antihorario(g, &direcao);
     if (direcao == 0) {
       if (g->adj[u-1][v] == 0) {
         printf("w\n"); // anda pa frente
@@ -287,6 +290,9 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
     }
     else if (direcao == 2) {
       if (g->adj[u+1][v] == 0) {
+        rotaciona_horario(g, &direcao);
+        rotaciona_horario(g, &direcao);
+        rotaciona_horario(g, &direcao);
         printf("w\n"); // anda pa frente
         fflush(stdout);
         scanf("%d", &result);
@@ -315,185 +321,8 @@ void busca_profundidade(grafo *g, int u, int v, int direcao) {
         return;
       }
     }
+    return;
   }
-  // if (frente && g->adj[u][v+1] == 0) {
-    
-  // }
-  // if (dir && g->adj[u+1][v] == 0) {
-  //   rotaciona_horario(g, &direcao);
-  //   printf("w\n"); // anda pa frente
-  //   fflush(stdout);
-  //   scanf("%d", &result);
-  //   if (result == 2) { // encontrou o objetivo
-  //     return;
-  //   }
-  //   switch (direcao) { // marca exatamente a coord pra onde ele navegou
-  //     case 0:
-  //       if (g->adj[u-1][v] == 0) {
-  //         g->adj[u-1][v] = 1; // virado pro norte
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 1:
-  //       if (g->adj[u][v+1] == 0) {
-  //         g->adj[u][v+1] = 1; // virado pro leste
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 2:
-  //       if (g->adj[u+1][v] == 0) {
-  //         g->adj[u+1][v] = 1; // virado pro sul
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 3:
-  //       if (g->adj[u][v-1] == 0) {
-  //         g->adj[u][v-1] = 1; // virado pro oeste
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       } 
-  //   }
-  //   switch (direcao) { // faz a busca e mantém rastreio da direçao
-  //     case 0:
-  //       busca_profundidade(g, u-1, v, direcao); // norte
-  //       break;
-  //     case 1:
-  //       busca_profundidade(g, u, v+1, direcao); // leste
-  //       break;
-  //     case 2:
-  //       busca_profundidade(g, u+1, v, direcao); // sul
-  //       break;
-  //     case 3:
-  //       busca_profundidade(g, u, v-1, direcao); // oeste
-  //       break;
-  //   }
-  // }
-  // if (esq && g->adj[u-1][v] == 0) {
-  //   rotaciona_antihorario(g, direcao);
-  //   printf("w\n"); // anda pa frente
-  //   fflush(stdout);
-  //   scanf("%d", &result);
-  //   if (result == 2) { // encontrou o objetivo
-  //     return;
-  //   }
-  //   switch (direcao) { // marca exatamente a coord pra onde ele navegou
-  //     case 0:
-  //       if (g->adj[u-1][v] == 0) {
-  //         g->adj[u-1][v] = 1; // virado pro norte
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 1:
-  //       if (g->adj[u][v+1] == 0) {
-  //         g->adj[u][v+1] = 1; // virado pro leste
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 2:
-  //       if (g->adj[u+1][v] == 0) {
-  //         g->adj[u+1][v] = 1; // virado pro sul
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 3:
-  //       if (g->adj[u][v-1] == 0) {
-  //         g->adj[u][v-1] = 1; // virado pro oeste
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       } 
-  //   }
-  //   switch (direcao) { // faz a busca e mantém rastreio da direçao
-  //     case 0:
-  //       busca_profundidade(g, u-1, v, direcao); // norte
-  //       break;
-  //     case 1:
-  //       busca_profundidade(g, u, v+1, direcao); // leste
-  //       break;
-  //     case 2:
-  //       busca_profundidade(g, u+1, v, direcao); // sul
-  //       break;
-  //     case 3:
-  //       busca_profundidade(g, u, v-1, direcao); // oeste
-  //       break;
-  //   }
-  // }
-  // if (tras && g->adj[u][v-1] == 0) {
-  //   rotaciona_antihorario(g, direcao);
-  //   rotaciona_antihorario(g, direcao);
-  //   printf("w\n"); // anda pa frente
-  //   fflush(stdout);
-  //   scanf("%d", &result);
-  //   if (result == 2) { // encontrou o objetivo
-  //     return;
-  //   }
-  //   switch (direcao) { // marca exatamente a coord pra onde ele navegou
-  //     case 0:
-  //       if (g->adj[u-1][v] == 0) {
-  //         g->adj[u-1][v] = 1; // virado pro norte
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 1:
-  //       if (g->adj[u][v+1] == 0) {
-  //         g->adj[u][v+1] = 1; // virado pro leste
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 2:
-  //       if (g->adj[u+1][v] == 0) {
-  //         g->adj[u+1][v] = 1; // virado pro sul
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       }
-  //     case 3:
-  //       if (g->adj[u][v-1] == 0) {
-  //         g->adj[u][v-1] = 1; // virado pro oeste
-  //       break;
-  //       }
-  //       else {
-  //         return;
-  //       } 
-  //   }
-  //   switch (direcao) { // faz a busca e mantém rastreio da direçao
-  //     case 0:
-  //       busca_profundidade(g, u-1, v, direcao); // norte
-  //       break;
-  //     case 1:
-  //       busca_profundidade(g, u, v+1, direcao); // leste
-  //       break;
-  //     case 2:
-  //       busca_profundidade(g, u+1, v, direcao); // sul
-  //       break;
-  //     case 3:
-  //       busca_profundidade(g, u, v-1, direcao); // oeste
-  //       break;
-  //   }
-  // }
-  // else if (g->adj[u][v+1] == 1) {
-  //   return;
-  // }
 }
 
 int main() {
