@@ -208,7 +208,19 @@ int apontarParaOPai(Coordenada atual, int direcao)
     return direcao;
 }
 // Buscas
-void buscaProfundidade(Coordenada atual, int direcao)
+
+void sobeNaDFS(Coordenada atual, int direcao)
+{
+    fprintf(stderr, "entrou na sobenadfs\n");
+    int direcaoPai = apontarParaOPai(atual, direcao);
+    fprintf(stderr, "entrou na sobenadfs\n");
+    int chegouNaOrigem = moverFrente(); // 1 se não chegou, 2 se chegou
+    if (chegouNaOrigem == 2) {
+        return;
+    }
+    sobeNaDFS(atual, direcaoPai);
+}
+void buscaProfundidade(Coordenada atual, int direcao, Coordenada * posicaoFinal, int * direcaoFinal)
 {
     int resultado;
     while (!todosVizinhosVisitados(atual, direcao))
@@ -221,6 +233,8 @@ void buscaProfundidade(Coordenada atual, int direcao)
             resultado = moverFrente();
             if (resultado == 2)
             {
+                *posicaoFinal = atual;
+                *direcaoFinal = direcao;
                 return;
             }
 
@@ -229,7 +243,7 @@ void buscaProfundidade(Coordenada atual, int direcao)
                 //fprintf("Coordenada caminho: %d, %d\n", prox.x, prox.y);
                 marcarVisitado(prox);
                 marcarPai(prox, atual);
-                buscaProfundidade(prox, direcao);
+                buscaProfundidade(prox, direcao, &posicaoFinal, &direcaoFinal);
                 return;
             }
             else if (resultado == 0)
@@ -248,7 +262,7 @@ void buscaProfundidade(Coordenada atual, int direcao)
     Coordenada pai = labirinto[atual.x][atual.y]->pai;
     direcao = apontarParaOPai(atual, direcao);
     moverFrente();
-    buscaProfundidade(pai, direcao);
+    buscaProfundidade(pai, direcao, &posicaoFinal, &direcaoFinal);
 }
 // BFS
 struct queue
@@ -257,12 +271,12 @@ struct queue
     int front;
     int rear;
 };
-struct queue *createQueue();
-void enqueue(struct queue *q, int);
-int dequeue(struct queue *q);
-void display(struct queue *q);
-int isEmpty(struct queue *q);
-void printQueue(struct queue *q);
+// struct queue *createQueue();
+// void enqueue(struct queue *q, int);
+// int dequeue(struct queue *q);
+// void display(struct queue *q);
+// int isEmpty(struct queue *q);
+// void printQueue(struct queue *q);
 // void bfs(struct Graph* graph, int startVertex) {
 //   struct queue* q = createQueue();
 //   graph->visited[startVertex] = 1;
@@ -293,10 +307,13 @@ int main()
             labirinto[i][j]->parede = false;
         }
     }
-    int direcao = 0;
+    Coordenada posicaoFinal;
+    int direcao = 0, direcaoFinal;
     Coordenada meioDaMatriz = {MATRIX_SIZE / 2, MATRIX_SIZE / 2};
     marcarVisitado(meioDaMatriz);
-    buscaProfundidade(meioDaMatriz, direcao);
+    buscaProfundidade(meioDaMatriz, direcao, &posicaoFinal, &direcaoFinal); // encontra o objetivo
+    fprintf(stderr, "antes da dfs\n");
+    sobeNaDFS(posicaoFinal, direcaoFinal);
     for (int i = 0; i < MATRIX_SIZE; i++)
     {
         for (int j = 0; j < MATRIX_SIZE; j++)
