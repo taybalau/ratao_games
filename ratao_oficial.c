@@ -216,8 +216,8 @@ void sobeNaDFS(Coordenada atual, int direcao)
     fprintf(stderr, "passou da apontarparaopai\n");
     int chegouNaOrigem = moverFrente(); // 1 se não chegou, 2 se chegou
     if (chegouNaOrigem == 2) {
-        return;
         fprintf(stderr, "chegou na origem\n");
+        return;
     }
     sobeNaDFS(atual, direcaoPai);
 }
@@ -234,6 +234,8 @@ void buscaProfundidade(Coordenada atual, int direcao, Coordenada * posicaoFinal,
             resultado = moverFrente();
             if (resultado == 2)
             {
+                marcarVisitado(prox);
+                marcarPai(prox, atual);
                 *posicaoFinal = proximaCoordenada(atual, direcao);
                 *direcaoFinal = direcao;
                 return;
@@ -244,6 +246,8 @@ void buscaProfundidade(Coordenada atual, int direcao, Coordenada * posicaoFinal,
                 //fprintf("Coordenada caminho: %d, %d\n", prox.x, prox.y);
                 marcarVisitado(prox);
                 marcarPai(prox, atual);
+                fprintf("prox %d %d", prox.x, prox.y);
+                fprintf("atual %d %d", atual.x, atual.y);
                 buscaProfundidade(prox, direcao, posicaoFinal, direcaoFinal);
                 return;
             }
@@ -272,31 +276,7 @@ struct queue
     int front;
     int rear;
 };
-// struct queue *createQueue();
-// void enqueue(struct queue *q, int);
-// int dequeue(struct queue *q);
-// void display(struct queue *q);
-// int isEmpty(struct queue *q);
-// void printQueue(struct queue *q);
-// void bfs(struct Graph* graph, int startVertex) {
-//   struct queue* q = createQueue();
-//   graph->visited[startVertex] = 1;
-//   enqueue(q, startVertex);
-//   while (!isEmpty(q)) {
-//     printQueue(q);
-//     int currentVertex = dequeue(q);
-//     printf("Visited %d\n", currentVertex);
-//     struct node* temp = graph->adjLists[currentVertex];
-//     while (temp) {
-//       int adjVertex = temp->vertex;
-//       if (graph->visited[adjVertex] == 0) {
-//         graph->visited[adjVertex] = 1;
-//         enqueue(q, adjVertex);
-//       }
-//       temp = temp->next;
-//     }
-//   }
-// }
+
 int main()
 {
     for (int i = 0; i < MATRIX_SIZE; i++)
@@ -313,8 +293,25 @@ int main()
     Coordenada meioDaMatriz = {MATRIX_SIZE / 2, MATRIX_SIZE / 2};
     marcarVisitado(meioDaMatriz);
     buscaProfundidade(meioDaMatriz, direcao, &posicaoFinal, &direcaoFinal); // encontra o objetivo
+    for (int i = 0; i < MATRIX_SIZE; i++)
+    {
+        for (int j = 0; j < MATRIX_SIZE; j++)
+        {
+            if (labirinto[i][j]->visitado == true) {
+                fprintf(stderr, "%d", 1);
+            }
+            else {
+                fprintf(stderr, "%d", 0);
+            }
+            
+        }
+        fprintf(stderr, "\n");
+    }
     fprintf(stderr, "antes da dfs\n");
     fprintf(stderr, "%d %d\n", posicaoFinal.x, posicaoFinal.y);
+    Coordenada pai = labirinto[posicaoFinal.x][posicaoFinal.y]->pai;
+    fprintf(stderr, "%d %d", pai.x, pai.y);
+    /* fprintf("%d", apontarParaOPai(pai, direcaoFinal)); */
     sobeNaDFS(posicaoFinal, direcaoFinal);
     for (int i = 0; i < MATRIX_SIZE; i++)
     {
