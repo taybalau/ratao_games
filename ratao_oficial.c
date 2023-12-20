@@ -215,6 +215,7 @@ void sobeNaDFS(Coordenada atual, int direcao)
     int direcaoPai = apontarParaOPai(atual, direcao);
     fprintf(stderr, "passou da apontarparaopai\n");
     int chegouNaOrigem = moverFrente(); // 1 se não chegou, 2 se chegou
+    atual = labirinto[atual.x][atual.y]->pai;
     if (chegouNaOrigem == 2) {
         fprintf(stderr, "chegou na origem\n");
         return;
