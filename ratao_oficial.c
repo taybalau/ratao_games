@@ -191,19 +191,19 @@ int apontarParaOPai(Coordenada atual, int direcao)
 {
     Coordenada pai = labirinto[atual.x][atual.y]->pai;
     Coordenada prox = proximaCoordenada(atual, direcao);
-    //fprintf(stderr, "Pai: (%d, %d). Prox:(%d, %d)\n", pai.x, pai.y, prox.x, prox.y);
-    //fprintf(stderr, "X é diferente? %d\n", pai.x != prox.x);
-    //fprintf(stderr, "Y é diferente? %d\n", pai.y != prox.y);
-    //fprintf(stderr, "Socorro? %d\n", (prox.x != pai.x) && (prox.y != pai.y));
+    fprintf(stderr, "Pai: (%d, %d). Prox:(%d, %d)\n", pai.x, pai.y, prox.x, prox.y);
+    fprintf(stderr, "X é diferente? %d\n", pai.x != prox.x);
+    fprintf(stderr, "Y é diferente? %d\n", pai.y != prox.y);
+    fprintf(stderr, "Socorro? %d\n", (prox.x != pai.x) && (prox.y != pai.y));
 
     while (!((prox.x == pai.x) && (prox.y == pai.y)))
     {
-        //fprintf(stderr, "entrei\n");
+        fprintf(stderr, "entrei\n");
         direcao = girarEsquerda(direcao);
-        //fprintf(stderr, "Girando para esquerda:\n");
-        //fprintf(stderr, "Direção:%d\n", direcao);
+        fprintf(stderr, "Girando para esquerda:\n");
+        fprintf(stderr, "Direção:%d\n", direcao);
         prox = proximaCoordenada(atual, direcao);
-        //fprintf(stderr, "Estou apontando para: (%d, %d)\n", prox.x, prox.y);
+        fprintf(stderr, "Estou apontando para: (%d, %d)\n", prox.x, prox.y);
     }
     return direcao;
 }
@@ -213,10 +213,11 @@ void sobeNaDFS(Coordenada atual, int direcao)
 {
     fprintf(stderr, "entrou na sobenadfs\n");
     int direcaoPai = apontarParaOPai(atual, direcao);
-    fprintf(stderr, "entrou na sobenadfs\n");
+    fprintf(stderr, "passou da apontarparaopai\n");
     int chegouNaOrigem = moverFrente(); // 1 se não chegou, 2 se chegou
     if (chegouNaOrigem == 2) {
         return;
+        fprintf(stderr, "chegou na origem\n");
     }
     sobeNaDFS(atual, direcaoPai);
 }
@@ -233,7 +234,7 @@ void buscaProfundidade(Coordenada atual, int direcao, Coordenada * posicaoFinal,
             resultado = moverFrente();
             if (resultado == 2)
             {
-                *posicaoFinal = atual;
+                *posicaoFinal = proximaCoordenada(atual, direcao);
                 *direcaoFinal = direcao;
                 return;
             }
@@ -243,7 +244,7 @@ void buscaProfundidade(Coordenada atual, int direcao, Coordenada * posicaoFinal,
                 //fprintf("Coordenada caminho: %d, %d\n", prox.x, prox.y);
                 marcarVisitado(prox);
                 marcarPai(prox, atual);
-                buscaProfundidade(prox, direcao, &posicaoFinal, &direcaoFinal);
+                buscaProfundidade(prox, direcao, posicaoFinal, direcaoFinal);
                 return;
             }
             else if (resultado == 0)
@@ -262,7 +263,7 @@ void buscaProfundidade(Coordenada atual, int direcao, Coordenada * posicaoFinal,
     Coordenada pai = labirinto[atual.x][atual.y]->pai;
     direcao = apontarParaOPai(atual, direcao);
     moverFrente();
-    buscaProfundidade(pai, direcao, &posicaoFinal, &direcaoFinal);
+    buscaProfundidade(pai, direcao, posicaoFinal, direcaoFinal);
 }
 // BFS
 struct queue
@@ -313,6 +314,7 @@ int main()
     marcarVisitado(meioDaMatriz);
     buscaProfundidade(meioDaMatriz, direcao, &posicaoFinal, &direcaoFinal); // encontra o objetivo
     fprintf(stderr, "antes da dfs\n");
+    fprintf(stderr, "%d %d\n", posicaoFinal.x, posicaoFinal.y);
     sobeNaDFS(posicaoFinal, direcaoFinal);
     for (int i = 0; i < MATRIX_SIZE; i++)
     {
